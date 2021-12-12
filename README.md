@@ -1,7 +1,7 @@
 # SRGP
 An SRGP rewrite.
 
-#To Do
+# To Do
 ### state.c
 - [ ] void SRGP_begin (char *name, int w, int h, int planes, boolean trace);
 - [ ] void SRGP_beginWithDebug (char *name, int w, int h, int planes, boolean trace);
