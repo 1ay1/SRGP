@@ -3,3 +3,7 @@ The Simple Raster Graphics Package is composed of a library of functions, and a 
 
 ## What works in this rewrite?
 Almost everything, just try to only work with windows of depth 24 (which is default for many screens these days).
+
+## Docs
+- Concise User Manual: [SRGP Manual](https://eecs.wsu.edu/~cs150/X_srgp.html)
+- 
