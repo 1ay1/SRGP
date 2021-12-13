@@ -1,6 +1,7 @@
 #include "srgp_private.h"
 #include <sys/types.h>
 #include <sys/time.h>
+#include <sys/select.h>
 #include <memory.h>
 #include <string.h>
 #include <ctype.h>
