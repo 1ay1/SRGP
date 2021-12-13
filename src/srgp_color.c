@@ -6,7 +6,6 @@
 void 
 SRGP__initColor (requested_planes)
 {
-   printf("COMES HERE\n");
    srgp__visual_class = DefaultVisual(srgpx__display, srgpx__screen)->class;
    srgp__available_depth = DefaultDepth(srgpx__display, srgpx__screen);
 
@@ -68,16 +67,17 @@ SRGP__initColor (requested_planes)
    XFlush(srgpx__display);
 
    // 0 -> Black 1 -> White
-   SRGP_BLACK = black_e.pixel;
-   SRGP_WHITE = white_e.pixel;
+   SRGP_BLACK = 1;
+   SRGP_WHITE = 0;
 
    //Initialize the Color Table with the 2 values of Black and White
    // 0 -> Black 1 -> White
    strcpy(srgp__colorLookup_table[0].name, "black");
-   srgp__colorLookup_table[0].pixel_value = SRGP_BLACK;
+   srgp__colorLookup_table[0].pixel_value = black_e.pixel;
+   srgp__colorLookup_table[0].set = TRUE;
    strcpy(srgp__colorLookup_table[1].name, "white");
-   srgp__colorLookup_table[1].pixel_value = SRGP_WHITE;
-   srgp__total_loaded_colors = 2;
+   srgp__colorLookup_table[1].pixel_value = white_e.pixel;
+   srgp__colorLookup_table[1].set = TRUE;
 
    /*** DONE FOR ALL CONFIGURATIONS. */
    XSetWindowBackground (srgpx__display, 
@@ -97,8 +97,7 @@ void SRGP_loadColorTable
     unsigned short *greeni,
     unsigned short *bluei)
 {
-   int sane_start_entry = srgp__total_loaded_colors;
-   int endi = sane_start_entry + count;
+   int endi = startentry + count;
 
    int sane_count = count;
    int sane_endi = endi;
@@ -106,10 +105,9 @@ void SRGP_loadColorTable
 
    if(endi > MAX_COLORTABLE_SIZE) {
       fprintf(stderr, "Be easy with the color allocation.\n\
-      You can only allocate %d colors in one program.\n\
-      You have %d left\n", MAX_COLORTABLE_SIZE, MAX_COLORTABLE_SIZE - srgp__total_loaded_colors);
+      You can only allocate %d colors in one program.\n", MAX_COLORTABLE_SIZE);
       sane_endi = MAX_COLORTABLE_SIZE;
-      sane_count = sane_endi - (srgp__total_loaded_colors - 1);
+      sane_count = count - (endi - sane_endi);
    }
 
    int count_ratio = count/sane_count;
@@ -127,10 +125,8 @@ void SRGP_loadColorTable
    }
 
    for(int i = 0; i < sane_count; i++) {
-      strcpy(srgp__colorLookup_table[srgp__total_loaded_colors].name, "rgb");
-      srgp__colorLookup_table[srgp__total_loaded_colors].pixel_value = x_color_structs[i].pixel +  ((i/2)*count_ratio);
-
-      srgp__total_loaded_colors++;
+      strcpy(srgp__colorLookup_table[startentry + i].name, "rgb");
+      srgp__colorLookup_table[startentry + i].pixel_value = x_color_structs[i].pixel +  ((i/2)*count_ratio);
    }
 
       DEBUG_AIDS{
@@ -138,7 +134,7 @@ void SRGP_loadColorTable
 		  startentry, sane_count, redi, greeni, bluei);
 
       /* PERFORM CHECKING LEGALITY OF THE RANGE OF INDICES. */
-      srgp_check_pixel_value (srgp__colorLookup_table[sane_start_entry].pixel_value, "start");
+      srgp_check_pixel_value (srgp__colorLookup_table[startentry].pixel_value, "start");
       srgp_check_pixel_value (srgp__colorLookup_table[sane_endi].pixel_value, "end");
    }
 }
@@ -171,11 +167,10 @@ SRGP_inquireColorTable
 
 
    if(endi > MAX_COLORTABLE_SIZE) {
-      fprintf(stderr, "Be easy with the color allocation.\n\
-      You can only allocate %d colors in one program.\n\
-      You have %d left\n", MAX_COLORTABLE_SIZE, MAX_COLORTABLE_SIZE - srgp__total_loaded_colors);
+      fprintf(stderr, "Getting colors just up to %d\
+      ", MAX_COLORTABLE_SIZE);
       sane_endi = MAX_COLORTABLE_SIZE;
-      sane_count = sane_endi - (srgp__total_loaded_colors - 1);
+      sane_count = count - (endi - sane_endi);
    }
 
    DEBUG_AIDS{
@@ -224,9 +219,9 @@ char *name;   /* Null-terminated string of characters */
       return;
    
    //check if the max color limit has reached
-   if(srgp__total_loaded_colors == MAX_COLORTABLE_SIZE) {
-      fprintf(stderr, "The color table if full, adding nothing!\n\
-      You can only add %d colors at a time!\n", MAX_COLORTABLE_SIZE);
+   if(entry > MAX_COLORTABLE_SIZE) {
+      fprintf(stderr, "Color index can be less than or equal to %d!\n", 
+      MAX_COLORTABLE_SIZE);
       return;
    }
 
@@ -238,14 +233,17 @@ char *name;   /* Null-terminated string of characters */
    XColor new, new_e;
    Status res = XAllocNamedColor(srgpx__display, srgpx__colormap, name, &new, &new_e);
 
+   DEBUG_AIDS{
+      SRGP_trace (SRGP_logStream, "SRGP_loadCommonColor  %d  %s\n", entry, name);
+      srgp_check_pixel_value (new_e.pixel, "start/end");
+   }
+
    if(!res) {
       fprintf(stderr, "Counldn't add color: %s, adding nothing!\n", name);
       return;
    }
 
-   //Initialize the Color Table with the 2 values of Black and White
-   strcpy(srgp__colorLookup_table[srgp__total_loaded_colors].name, name);
-   srgp__colorLookup_table[srgp__total_loaded_colors].pixel_value = new_e.pixel;
-
-   srgp__total_loaded_colors++;
+   strcpy(srgp__colorLookup_table[entry].name, name);
+   srgp__colorLookup_table[entry].pixel_value = new_e.pixel;
+   srgp__colorLookup_table[entry].set = TRUE;
 }

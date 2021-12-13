@@ -5,12 +5,18 @@ Handles differences between Macintosh and UNIX.
 #define MALLOCARGTYPE   unsigned
 #define REALLOCARGTYPE  char *
 #define MALLOCFUNC	malloc
+#define CALLOCFUNC	calloc
 #define REALLOCFUNC	realloc
 #define FREEFUNC	free
 
 #define ALLOC_RECORDS(PTR,TYPE,NUM) 				      \
    if ((PTR = (TYPE *)						      \
 	MALLOCFUNC ((MALLOCARGTYPE) ((NUM) * sizeof(TYPE)))) == NULL) \
+      REPORT_ERROR (ERR_MALLOC); else
+
+#define CALLOC_RECORDS(PTR,TYPE,NUM) 				      \
+   if ((PTR = (TYPE *)						      \
+	CALLOCFUNC (NUM,(sizeof(TYPE)))) == NULL) \
       REPORT_ERROR (ERR_MALLOC); else
 
 #define ALLOC(PTR,TYPE,NUM) 				     	\

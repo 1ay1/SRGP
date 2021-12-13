@@ -364,6 +364,10 @@ SRGP_setPlaneMask (int value)
 void
 SRGP_setColor (int value)
 {
+   if(value > MAX_COLORTABLE_SIZE) {
+      value = MAX_COLORTABLE_SIZE;
+   }
+
    if (value == CURRENT_VALUE(color)) return;
 
    DEBUG_AIDS{
@@ -373,8 +377,8 @@ SRGP_setColor (int value)
       LeaveIfNonFatalErr();
    }
 
-   if (value > srgp__total_loaded_colors)
-      value = srgp__colorLookup_table[1].pixel_value;
+   if (!srgp__colorLookup_table[value].set)
+      value = 1;
    srgp__curActiveCanvasSpec.attributes.color = value;
 
    XSetForeground(srgpx__display, srgp__curActiveCanvasSpec.gc_fill,
@@ -388,6 +392,9 @@ SRGP_setColor (int value)
 void
 SRGP_setBackgroundColor (int value)
 {
+   if(value > MAX_COLORTABLE_SIZE) {
+      value = MAX_COLORTABLE_SIZE;
+   }
    if (value == CURRENT_VALUE(background_color)) return;
 
    DEBUG_AIDS{
@@ -397,8 +404,8 @@ SRGP_setBackgroundColor (int value)
       LeaveIfNonFatalErr();
    }
 
-   if (value > srgp__total_loaded_colors)
-      value = srgp__colorLookup_table[0].pixel_value;
+   if (!srgp__colorLookup_table[value].set)
+      value = 0;
    srgp__curActiveCanvasSpec.attributes.background_color = value;
 
    XSetBackground(srgpx__display, srgp__curActiveCanvasSpec.gc_fill,

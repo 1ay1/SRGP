@@ -209,10 +209,10 @@ DECLARE int		srgp__visual_class;
 typedef struct __srgp__colorTable_entry {
    char name[100];
    unsigned long pixel_value;
+   boolean set;
 } srgp__colorTable_entry;
 
 DECLARE srgp__colorTable_entry *srgp__colorLookup_table;
-DECLARE unsigned int srgp__total_loaded_colors;
 
 void SRGP__initColor (int requested_planes);
 void SRGP__cleanupColor (void);

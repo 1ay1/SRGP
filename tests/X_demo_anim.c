@@ -96,7 +96,7 @@ EVUbegin(void)
    char inpt[2];
 
 
-   SRGP_begin ("SRGP Demonstration", 824, 600, 24, FALSE);
+   SRGP_begin ("SRGP Demonstration", 1024, 800, 24, TRUE);
    SRGP_setKeyboardProcessingMode (RAW);
    SRGP_setInputMode (KEYBOARD, EVENT);
 

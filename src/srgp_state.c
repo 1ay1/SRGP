@@ -60,7 +60,7 @@ InitSRGP (char *name, int width, int height, int requested_planes, boolean debug
    ALLOC_RECORDS (srgp__cursorTable, cursorInfo, MAX_CURSOR_INDEX+1);
    ALLOC_RECORDS (srgp__canvasTable, canvas_spec, MAX_CANVAS_INDEX+1);
    ALLOC_RECORDS (Xformat_vertices, XPoint, MAX_POINTLIST_SIZE);
-   ALLOC_RECORDS (srgp__colorLookup_table, srgp__colorTable_entry, MAX_COLORTABLE_SIZE + 1);
+   CALLOC_RECORDS (srgp__colorLookup_table, srgp__colorTable_entry, MAX_COLORTABLE_SIZE + 1);
    
    srgp__curActiveCanvasId = 0;
    srgp__curActiveCanvasSpec.max_xcoord = (width-1);
@@ -276,9 +276,9 @@ void SRGP__initGraphicsDevice
       XCreateGC (srgpx__display, srgp__curActiveCanvasSpec.drawable.win,
 		 0L, NULL);
    XSetForeground(srgpx__display, srgp__curActiveCanvasSpec.gc_fill,
-	srgp__colorLookup_table[0].pixel_value);
+	SRGP_BLACK);
    XSetForeground(srgpx__display, srgp__curActiveCanvasSpec.gc_frame,
-	srgp__colorLookup_table[1].pixel_value);
+	SRGP_WHITE);
 
 
 
