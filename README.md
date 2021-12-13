@@ -1,4 +1,5 @@
 # SRGP
+A simple graphics library for C.
 The Simple Raster Graphics Package is composed of a library of functions, and a header file ("srgp.h") that defines custom data types and constants, and which prototypes all SRGP routines.
 
 ## What works in this rewrite?
