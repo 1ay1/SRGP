@@ -1,65 +1,107 @@
-# Request POSIX Make behavior and disable any default suffix-based rules
 .POSIX:
 .SUFFIXES:
 
-
-# Declare compiler tools and flags
 AR      = ar
 CC      = cc
-CFLAGS  = -std=c99 -D_POSIX_C_SOURCE=200809L
-CFLAGS += -fPIC -g -Og
+CFLAGS  = -std=c99 -fPIC -Isrc/
 CFLAGS += -Wall -Wextra -Wpedantic
-CFLAGS += -Wno-unused-parameter
-CFLAGS += -Isrc/
-LDFLAGS =
+CFLAGS += -g -Og -march=native -mtune=native
+CFLAGS += -DX11
 LDLIBS  = -lX11
 
+sources =             	\
+  src/geom.c          	\
+  src/srgp_attrib.c   	\
+  src/srgp_canvas.c   	\
+  src/srgp_color.c  	\
+  src/srgp_cursor.c 	\
+  src/srgp_echo.c   	\
+  src/srgp_error.c    	\
+  src/srgp_font.c     	\
+  src/srgp_input.c    	\
+  src/srgp_inquire.c  	\
+  src/srgp_marker.c   	\
+  src/srgp_output.c   	\
+  src/srgp_pattern.c  	\
+  src/srgp_raster.c   	\
+  src/srgp_state.c    	\
 
-# Declare which targets should be built by default
-default: libsrgp.a
-all: libsrgp.a libsrgp.so
+objects = $(sources:.c=.o)
+
+tests =		              	\
+	show_patterns         	\
+	testcolor_and_resize	\
+	testeditkeyboard    	\
+	test_keyboard         	\
+	test_locator          	\
+	testmodifiers         	\
+	testpaint             	\
+	testpixmap            	\
+	testrubber            	\
+	testtimestamp         	\
+	X_demo_anim
 
 
-# Declare static / shared library sources
-libsrgp_sources = $(wildcard src/*.c)
-libsrgp_headers = $(wildcard src/*.h)
-libsrgp_objects = $(libsrgp_sources:.c=.o)
+all: libsrgp.a libsrgp.so $(tests)
+libsrgp.a: $(objects)
+	$(AR) rcs $@ $(objects)
+libsrgp.so: $(objects)
+	$(CC) -shared -o $@ $(objects) $(LDLIBS)
 
-tests = $(wildcard tests/*.c)
-tests_bins = $(tests:.c=)
+src/geom.o: src/geom.c
+src/srgp_attrib.o: src/srgp_attrib.c
+src/srgp_canvas.o: src/srgp_canvas.c
+src/srgp_color.o: src/srgp_color.c
+src/srgp_cursor.o: src/srgp_cursor.c
+src/srgp_echo.o: src/srgp_echo.c
+src/srgp_error.o: src/srgp_error.c
+src/srgp_font.o: src/srgp_font.c
+src/srgp_input.o: src/srgp_input.c
+src/srgp_inquire.o: src/srgp_inquire.c
+src/srgp_marker.o: src/srgp_marker.c
+src/srgp_output.o: src/srgp_output.c
+src/srgp_pattern.o: src/srgp_pattern.c
+src/srgp_raster.o: src/srgp_raster.c
+src/srgp_state.o: src/srgp_state.c
 
-# Express dependencies between object and source files
-$(libsrgp_objects): $(libsrgp_sources) $(libsrgp_headers)
-	$(CC) $(CFLAGS) -c $< -o $@
+show_patterns: tests/show_patterns.c libsrgp.a
+	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
 
-# Build the static library
-libsrgp.a: $(libsrgp_objects)
-	@echo "BUILDING STATIC  $@"
-	@$(AR) rcs $@ $(libsrgp_objects)
+testcolor_and_resize:  tests/testcolor_and_resize.c libsrgp.a
+	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
 
-# Build the shared library
-libsrgp.so: $(libsrgp_objects)
-	@echo "BUILDING SHARED  $@"
-	@$(CC) $(LDFLAGS) -shared -o $@ $(libsrgp_objects) $(LDLIBS)
+testeditkeyboard:  tests/testeditkeyboard.c libsrgp.a
+	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
 
+test_keyboard:  tests/test_keyboard.c libsrgp.a
+	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
 
-# Build the tests binary
+test_locator:  tests/test_locator.c libsrgp.a
+	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
 
-# Helper target that cleans up build artifacts
-.PHONY: clean tests clean_tests
-clean:
-	rm -fr *.a *.so src/*.o
+testmodifiers:  tests/testmodifiers.c  libsrgp.a
+	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
 
-clean_tests:
-	cd tests && ls | grep -v "\." | xargs rm
+testpaint:  tests/testpaint.c libsrgp.a
+	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
 
-tests: $(tests_bins)
+testpixmap:  tests/testpixmap.c libsrgp.a
+	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
 
-$(tests_bins): $(tests)
-	$(CC) $(CFLAGS) $< libsrgp.a -o $@
+testrubber:  tests/testrubber.c libsrgp.a
+	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
 
-# Default rule for compiling .c files to .o object files
+testtimestamp:  tests/testtimestamp.c libsrgp.a
+	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
+
+X_demo_anim:  tests/X_demo_anim.c libsrgp.a
+	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
+
 .SUFFIXES: .c .o
 .c.o:
-	@echo "CC      $@"
-	@$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+
+.PHONY: clean
+clean:
+	rm -f libsrgp.a libsrgp.so $(objects) $(tests)

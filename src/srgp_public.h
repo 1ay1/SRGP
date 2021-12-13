@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <X11/Xlib.h>
 
 
@@ -159,6 +160,12 @@ DECLARE short MAX_STRING_SIZE
 DECLARE short MAX_POINTLIST_SIZE
 #ifdef SRGP_BOSS
                       = DEFAULT_MAX_POINTLIST_SIZE
+#endif
+      ;
+
+DECLARE short MAX_COLORTABLE_SIZE
+#ifdef SRGP_BOSS
+                      = DEFAULT_MAX_COLORTABLE_SIZE
 #endif
       ;
 

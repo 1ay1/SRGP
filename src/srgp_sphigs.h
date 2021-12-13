@@ -3,12 +3,13 @@
 
 /* implementation-specific constants */
 
-#define DEFAULT_MAX_PATTERN_INDEX      150
-#define DEFAULT_MAX_CURSOR_INDEX	25
-#define DEFAULT_MAX_FONT_INDEX          50
-#define DEFAULT_MAX_CANVAS_INDEX        50
-#define DEFAULT_MAX_STRING_SIZE		80
-#define DEFAULT_MAX_POINTLIST_SIZE     500
+#define DEFAULT_MAX_PATTERN_INDEX         150
+#define DEFAULT_MAX_CURSOR_INDEX	         25
+#define DEFAULT_MAX_FONT_INDEX            50
+#define DEFAULT_MAX_CANVAS_INDEX          50
+#define DEFAULT_MAX_STRING_SIZE		      80
+#define DEFAULT_MAX_POINTLIST_SIZE        500
+#define DEFAULT_MAX_COLORTABLE_SIZE       1000
 
 /*!*/
 /* EXTRA DATA TYPES */
