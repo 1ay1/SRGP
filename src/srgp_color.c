@@ -6,6 +6,7 @@
 void 
 SRGP__initColor (requested_planes)
 {
+   printf("COMES HERE\n");
    srgp__visual_class = DefaultVisual(srgpx__display, srgpx__screen)->class;
    srgp__available_depth = DefaultDepth(srgpx__display, srgpx__screen);
 
@@ -31,18 +32,19 @@ SRGP__initColor (requested_planes)
    }
    
    if(!supports_requested_depth) {
-      fprintf(stderr, "The requested depth(planes) of %d is not supported\n",
-      "Supported depths: %s\n", requested_planes, error_msg_buf);
+      fprintf(stderr, "The requested depth(planes) %d is not supported\n\
+      Supported depths: %s\n", requested_planes, error_msg_buf);
       abort();
    }
+
 
    XVisualInfo srgp_visual_info;
    Status res = XMatchVisualInfo(srgpx__display, srgpx__screen,
    requested_planes, TrueColor, &srgp_visual_info);
 
    if(!res) {
-      fprintf(stderr, "There is no visual with that depth %d. Try some other depth.\n",
-      "Supported depths: %s\n", requested_planes, error_msg_buf);
+      fprintf(stderr, "There is no visual with depth %d. Try some other depth, 24 works almost always!\n\
+      Supported depths: %s\n", requested_planes, error_msg_buf);
       abort();
    }
 
@@ -61,16 +63,16 @@ SRGP__initColor (requested_planes)
    //get the black and white pixel values
    XFlush(srgpx__display);
    XColor black, black_e, white, white_e;
-   XAllocNamedColor(srgpx__display, srgpx__colormap, "Black", &black, &black_e);
-   XAllocNamedColor(srgpx__display, srgpx__colormap, "White", &white, &white_e);
+   XAllocNamedColor(srgpx__display, srgpx__colormap, "black", &black, &black_e);
+   XAllocNamedColor(srgpx__display, srgpx__colormap, "white", &white, &white_e);
    XFlush(srgpx__display);
 
-   SRGP_BLACK = black.pixel;
-   SRGP_WHITE = white.pixel;
-
-   printf("%d ---  %d\n", black.pixel, white.pixel);
+   // 0 -> Black 1 -> White
+   SRGP_BLACK = black_e.pixel;
+   SRGP_WHITE = white_e.pixel;
 
    //Initialize the Color Table with the 2 values of Black and White
+   // 0 -> Black 1 -> White
    strcpy(srgp__colorLookup_table[0].name, "black");
    srgp__colorLookup_table[0].pixel_value = SRGP_BLACK;
    strcpy(srgp__colorLookup_table[1].name, "white");
@@ -103,9 +105,9 @@ void SRGP_loadColorTable
 
 
    if(endi > MAX_COLORTABLE_SIZE) {
-      fprintf(stderr, "Be easy with the color allocation.\n",
-      "You can only allocate %d colors in one program.\n",
-      "You have %d left\n", MAX_COLORTABLE_SIZE, MAX_COLORTABLE_SIZE - srgp__total_loaded_colors);
+      fprintf(stderr, "Be easy with the color allocation.\n\
+      You can only allocate %d colors in one program.\n\
+      You have %d left\n", MAX_COLORTABLE_SIZE, MAX_COLORTABLE_SIZE - srgp__total_loaded_colors);
       sane_endi = MAX_COLORTABLE_SIZE;
       sane_count = sane_endi - (srgp__total_loaded_colors - 1);
    }
@@ -164,33 +166,45 @@ SRGP_inquireColorTable
 
    endi = startentry + count;
 
+   int sane_count = count;
+   int sane_endi = endi;
+
+
+   if(endi > MAX_COLORTABLE_SIZE) {
+      fprintf(stderr, "Be easy with the color allocation.\n\
+      You can only allocate %d colors in one program.\n\
+      You have %d left\n", MAX_COLORTABLE_SIZE, MAX_COLORTABLE_SIZE - srgp__total_loaded_colors);
+      sane_endi = MAX_COLORTABLE_SIZE;
+      sane_count = sane_endi - (srgp__total_loaded_colors - 1);
+   }
+
    DEBUG_AIDS{
       /* PERFORM CHECKING LEGALITY OF THE RANGE OF INDICES. */
-      srgp_check_pixel_value (startentry, "start");
-      srgp_check_pixel_value (endi-1, "end");
+      srgp_check_pixel_value (srgp__colorLookup_table[startentry].pixel_value, "start");
+      srgp_check_pixel_value (srgp__colorLookup_table[sane_endi].pixel_value, "end");
    }
 
 
    /* !!!!!! LATER, THIS SHOULD USE SAME ARRAY AS IN color_X11.c */
 
    /* DYNAMICALLY (RE)ALLOCATE ARRAY OF XColor STRUCTURES */
-   if (cursize_of_x_cs_array < count) {
+   if (cursize_of_x_cs_array < sane_count) {
       if (x_color_structs)
 	 free ((char*)x_color_structs);
-      x_color_structs = (XColor*) malloc (sizeof(XColor)*count);
-      cursize_of_x_cs_array = count;
+      x_color_structs = (XColor*) malloc (sizeof(XColor)*sane_count);
+      cursize_of_x_cs_array = sane_count;
    }
 
-   for (i=startentry, xcurcs=x_color_structs; i<endi; i++,xcurcs++) {
-      xcurcs->pixel = COLORINDEX(i);
+   for (i=startentry, xcurcs=x_color_structs; i<sane_endi; i++,xcurcs++) {
+      xcurcs->pixel = srgp__colorLookup_table[i].pixel_value ;
       xcurcs->flags = -1;
    }
 
-   XQueryColors (srgpx__display, srgpx__colormap, x_color_structs, count);
+   XQueryColors (srgpx__display, srgpx__colormap, x_color_structs, sane_count);
 
 
    /* COPY INTENSITY VALUES INTO USER'S ARRAY. */
-   for (j=0, xcurcs=x_color_structs; j<count; j++,xcurcs++){
+   for (j=0, xcurcs=x_color_structs; j<sane_count; j++,xcurcs++){
       redi[j] = xcurcs->red;
       greeni[j] = xcurcs->green;
       bluei[j] = xcurcs->blue;
@@ -211,8 +225,8 @@ char *name;   /* Null-terminated string of characters */
    
    //check if the max color limit has reached
    if(srgp__total_loaded_colors == MAX_COLORTABLE_SIZE) {
-      fprintf(stderr, "The color table if full, adding nothing!\n", 
-      "You can only add %d colors at a time!\n", MAX_COLORTABLE_SIZE);
+      fprintf(stderr, "The color table if full, adding nothing!\n\
+      You can only add %d colors at a time!\n", MAX_COLORTABLE_SIZE);
       return;
    }
 

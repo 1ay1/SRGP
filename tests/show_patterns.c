@@ -21,7 +21,7 @@ char *numstr;
 
 main()
 {
-   SRGP_begin ("SRGP Patterns", 950,720, 24, FALSE);
+   SRGP_begin ("SRGP Patterns", 950,720, 24, TRUE);
    SRGP_text (SRGP_defPoint(5, 700),
 	      "SRGP patterns (drawn in black in REPLACE mode)");
    SRGP_text (SRGP_defPoint(5, 680),

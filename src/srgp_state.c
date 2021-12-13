@@ -277,7 +277,7 @@ void SRGP__initGraphicsDevice
 		 0L, NULL);
    XSetForeground(srgpx__display, srgp__curActiveCanvasSpec.gc_fill,
 	srgp__colorLookup_table[0].pixel_value);
-   XSetForeground(srgpx__display, srgp__curActiveCanvasSpec.gc_fill,
+   XSetForeground(srgpx__display, srgp__curActiveCanvasSpec.gc_frame,
 	srgp__colorLookup_table[1].pixel_value);
 
 
