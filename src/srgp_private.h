@@ -198,12 +198,11 @@ DECLARE int		srgp__application_depth;  /* specified by appl */
 DECLARE int		srgp__base_colorindex;    /* explained in color_X11.c */
 
 DECLARE int		srgp__visual_class;
-#define XBLACK		BlackPixel(srgpx__display,srgpx__screen)
-#define XWHITE		WhitePixel(srgpx__display,srgpx__screen)
-#define XCOLOR(I)	(I == 0 ? XWHITE : (I == 1 ? XBLACK : I))
+#define XBLACK		srgp__colorLookup_table[SRGP_BLACK].pixel_value
+#define XWHITE		srgp__colorLookup_table[SRGP_WHITE].pixel_value
+#define XCOLOR(I)	(I == 0 ? XWHITE : (I == 1 ? XBLACK : srgp__colorLookup_table[SRGP_BLACK].pixel_value))
  
-#define COLORINDEX(c) \
-    ( (unsigned long)(c) | (unsigned long)srgp__base_colorindex )
+#define COLORINDEX(c) SRGP__getColorIndex(c)
 
 //Maintain a Look Up Table for colors
 typedef struct __srgp__colorTable_entry {
@@ -218,6 +217,7 @@ void SRGP__initColor (int requested_planes);
 void SRGP__cleanupColor (void);
 void SRGP__activateApplColorTable (void);
 void SRGP__deactivateApplColorTable (void);
+unsigned int SRGP__getColorIndex(unsigned long pixel_value);
 
 
 /** LOW-LEVEL GRAPHICS **/

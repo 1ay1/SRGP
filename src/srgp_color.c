@@ -66,24 +66,24 @@ SRGP__initColor (requested_planes)
    XAllocNamedColor(srgpx__display, srgpx__colormap, "white", &white, &white_e);
    XFlush(srgpx__display);
 
-   // 0 -> Black 1 -> White
-   SRGP_BLACK = 0;
-   SRGP_WHITE = 1;
+   // 1 -> Black 0 -> White
+   SRGP_BLACK = 1;
+   SRGP_WHITE = 0;
 
    //Initialize the Color Table with the 2 values of Black and White
    // 0 -> Black 1 -> White
-   strcpy(srgp__colorLookup_table[0].name, "black");
-   srgp__colorLookup_table[0].pixel_value = black_e.pixel;
-   srgp__colorLookup_table[0].set = TRUE;
-   strcpy(srgp__colorLookup_table[1].name, "white");
-   srgp__colorLookup_table[1].pixel_value = white_e.pixel;
+   strcpy(srgp__colorLookup_table[1].name, "black");
+   srgp__colorLookup_table[1].pixel_value = black_e.pixel;
    srgp__colorLookup_table[1].set = TRUE;
+   strcpy(srgp__colorLookup_table[0].name, "white");
+   srgp__colorLookup_table[0].pixel_value = white_e.pixel;
+   srgp__colorLookup_table[0].set = TRUE;
 
    /*** DONE FOR ALL CONFIGURATIONS. */
    XSetWindowBackground (srgpx__display, 
-			 srgp__curActiveCanvasSpec.drawable.win, SRGP_WHITE);
+			 srgp__curActiveCanvasSpec.drawable.win, srgp__colorLookup_table[SRGP_WHITE].pixel_value);
    XSetWindowBorder (srgpx__display, 
-		     srgp__curActiveCanvasSpec.drawable.win, SRGP_BLACK);
+		     srgp__curActiveCanvasSpec.drawable.win, srgp__colorLookup_table[SRGP_BLACK].pixel_value);
 
    //Free things
    XFree(all_depths);
@@ -246,4 +246,24 @@ char *name;   /* Null-terminated string of characters */
    strcpy(srgp__colorLookup_table[entry].name, name);
    srgp__colorLookup_table[entry].pixel_value = new_e.pixel;
    srgp__colorLookup_table[entry].set = TRUE;
+}
+
+
+/* gets the color index from the pixel_value
+   if there is no such pixel_value it will just
+   return the Black color
+*/
+unsigned int SRGP__getColorIndex(unsigned long pixel_value)
+{
+   for(int i = 0; i < MAX_COLORTABLE_SIZE; i++) {
+      if(!srgp__colorLookup_table[i].set) {
+         continue;
+      } else {
+         if(srgp__colorLookup_table[i].pixel_value == pixel_value) {
+            return i;
+         }
+      }
+   }
+
+   return SRGP_BLACK;
 }

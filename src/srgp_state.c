@@ -275,10 +275,6 @@ void SRGP__initGraphicsDevice
    srgp__curActiveCanvasSpec.gc_fill =
       XCreateGC (srgpx__display, srgp__curActiveCanvasSpec.drawable.win,
 		 0L, NULL);
-   XSetForeground(srgpx__display, srgp__curActiveCanvasSpec.gc_fill,
-	SRGP_BLACK);
-   XSetForeground(srgpx__display, srgp__curActiveCanvasSpec.gc_frame,
-	SRGP_WHITE);
 
 
 
