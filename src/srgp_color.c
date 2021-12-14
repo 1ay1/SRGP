@@ -67,8 +67,8 @@ SRGP__initColor (requested_planes)
    XFlush(srgpx__display);
 
    // 0 -> Black 1 -> White
-   SRGP_BLACK = 1;
-   SRGP_WHITE = 0;
+   SRGP_BLACK = 0;
+   SRGP_WHITE = 1;
 
    //Initialize the Color Table with the 2 values of Black and White
    // 0 -> Black 1 -> White

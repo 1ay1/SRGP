@@ -378,7 +378,7 @@ SRGP_setColor (int value)
    }
 
    if (!srgp__colorLookup_table[value].set)
-      value = 1;
+      value = SRGP_BLACK;
    srgp__curActiveCanvasSpec.attributes.color = value;
 
    XSetForeground(srgpx__display, srgp__curActiveCanvasSpec.gc_fill,
@@ -405,7 +405,7 @@ SRGP_setBackgroundColor (int value)
    }
 
    if (!srgp__colorLookup_table[value].set)
-      value = 0;
+      value = SRGP_WHITE;
    srgp__curActiveCanvasSpec.attributes.background_color = value;
 
    XSetBackground(srgpx__display, srgp__curActiveCanvasSpec.gc_fill,
