@@ -9,6 +9,10 @@ SRGP__initColor (requested_planes)
    srgp__visual_class = DefaultVisual(srgpx__display, srgpx__screen)->class;
    srgp__available_depth = DefaultDepth(srgpx__display, srgpx__screen);
 
+   if(requested_planes == 0) {
+      requested_planes = srgp__available_depth;   
+   }
+
    int depth_count;
    int supports_requested_depth = 0;
 
