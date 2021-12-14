@@ -21,7 +21,7 @@ char *numstr;
 
 main()
 {
-   SRGP_begin ("SRGP Patterns", 950,720, 24, TRUE);
+   SRGP_begin ("SRGP Patterns", 950,720, 0, TRUE);
    SRGP_text (SRGP_defPoint(5, 700),
 	      "SRGP patterns (drawn in black in REPLACE mode)");
    SRGP_text (SRGP_defPoint(5, 680),
@@ -43,8 +43,8 @@ main()
       }
    }
 
-   SRGP_loadCommonColor (2, "red");
-   SRGP_loadCommonColor (3, "blue");
+   SRGP_loadCommonColor (2, "brown");
+   SRGP_loadCommonColor (3, "aqua");
    SRGP_setColor (2);
    SRGP_setBackgroundColor (3);
 

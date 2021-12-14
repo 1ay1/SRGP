@@ -202,7 +202,8 @@ DECLARE int		srgp__visual_class;
 #define XWHITE		srgp__colorLookup_table[SRGP_WHITE].pixel_value
 #define XCOLOR(I)	(I == 0 ? XWHITE : (I == 1 ? XBLACK : srgp__colorLookup_table[SRGP_BLACK].pixel_value))
  
-#define COLORINDEX(c) SRGP__getColorIndex(c)
+#define COLORINDEX(c) \
+    ( (unsigned long)(c) | (unsigned long)srgp__base_colorindex )
 
 //Maintain a Look Up Table for colors
 typedef struct __srgp__colorTable_entry {

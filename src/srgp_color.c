@@ -251,23 +251,3 @@ char *name;   /* Null-terminated string of characters */
    srgp__colorLookup_table[entry].pixel_value = new_e.pixel;
    srgp__colorLookup_table[entry].set = TRUE;
 }
-
-
-/* gets the color index from the pixel_value
-   if there is no such pixel_value it will just
-   return the Black color
-*/
-unsigned int SRGP__getColorIndex(unsigned long pixel_value)
-{
-   for(int i = 0; i < MAX_COLORTABLE_SIZE; i++) {
-      if(!srgp__colorLookup_table[i].set) {
-         continue;
-      } else {
-         if(srgp__colorLookup_table[i].pixel_value == pixel_value) {
-            return i;
-         }
-      }
-   }
-
-   return SRGP_BLACK;
-}
