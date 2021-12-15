@@ -35,6 +35,7 @@ tests =		              	\
 	test_keyboard         	\
 	test_locator          	\
 	testmodifiers         	\
+	live_chart		\
 	testpaint             	\
 	testpixmap            	\
 	testrubber            	\
@@ -68,6 +69,9 @@ show_patterns: tests/show_patterns.c libsrgp.a
 	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
 
 testcolor_and_resize:  tests/testcolor_and_resize.c libsrgp.a
+	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
+
+live_chart:  tests/live_chart.c libsrgp.a
 	$(CC) $(CFLAGS) -o $@ $< libsrgp.a $(LDLIBS)
 
 testeditkeyboard:  tests/testeditkeyboard.c libsrgp.a
