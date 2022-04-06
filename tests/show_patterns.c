@@ -44,7 +44,7 @@ main()
    }
 
    SRGP_loadCommonColor (2, "brown");
-   SRGP_loadCommonColor (3, "aqua");
+   SRGP_loadCommonColor (3, "cyan");
    SRGP_setColor (2);
    SRGP_setBackgroundColor (3);
 

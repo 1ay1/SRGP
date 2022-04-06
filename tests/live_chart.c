@@ -18,9 +18,9 @@ int y_axis[X_COUNT];
 
 void clearScreen()
 {
-    SRGP_setColor(SRGP_WHITE);
-    SRGP_fillRectangleCoord(0, 0, WIDTH, HEIGHT);
     SRGP_setColor(SRGP_BLACK);
+    SRGP_fillRectangleCoord(0, 0, WIDTH, HEIGHT);
+    SRGP_setColor(SRGP_WHITE);
 }
 
 void updateScreen()
@@ -28,7 +28,7 @@ void updateScreen()
     static boolean initialized = FALSE;
     clearScreen();
     int x_step = (WIDTH - 50)/X_COUNT;
-    SRGP_setColor(SRGP_BLACK);
+    SRGP_setColor(SRGP_WHITE);
     SRGP_lineCoord(50/2, 50/2, 50/2, HEIGHT - 50);
     SRGP_lineCoord(50/2, 50/2, WIDTH - 50, 50/2);
     for(int i = 0; i < X_COUNT; i++) {
@@ -68,7 +68,7 @@ main()
     srand(time(NULL));
     SRGP_begin("new_test", WIDTH, HEIGHT, 0, TRUE);
     SRGP_setLineWidth(2);
-    SRGP_loadCommonColor(BLUE, "blue");
+    SRGP_loadCommonColor(BLUE, "lightblue");
     SRGP_loadCommonColor(GRAY, "gray");
 
     while(1) {
