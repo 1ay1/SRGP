@@ -21,7 +21,7 @@ char **argv;
    SRGP_loadCommonColor (5, "maroon");
    SRGP_setKeyboardEchoColor (5);
 
-   SRGP_loadCommonColor (6, "navy");
+   SRGP_loadCommonColor (6, "blue");
    SRGP_setColor (6);
 
    SRGP_setKeyboardEchoOrigin (SRGP_defPoint(100,600));
@@ -44,7 +44,6 @@ char **argv;
    fprintf (stderr, "Here's the truncated string: %s\n", km);
 
    SRGP_text (SRGP_defPoint(5,100), "Goodbye!");
+   SRGP_refresh();
    sleep(3);
-
-
 }

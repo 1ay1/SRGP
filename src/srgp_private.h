@@ -200,7 +200,7 @@ DECLARE int		srgp__base_colorindex;    /* explained in color_X11.c */
 DECLARE int		srgp__visual_class;
 #define XBLACK		srgp__colorLookup_table[SRGP_BLACK].pixel_value
 #define XWHITE		srgp__colorLookup_table[SRGP_WHITE].pixel_value
-#define XCOLOR(I)	(I == 0 ? XWHITE : (I == 1 ? XBLACK : srgp__colorLookup_table[SRGP_BLACK].pixel_value))
+#define XCOLOR(I)	(I == 0 ? XBLACK : (I == 1 ? XWHITE : srgp__colorLookup_table[I].pixel_value))
  
 #define COLORINDEX(c) \
     ( (unsigned long)(c) | (unsigned long)srgp__base_colorindex )

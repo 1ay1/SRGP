@@ -38,7 +38,7 @@ SRGP__initInputModule ()
 
    /* DEFAULT KEYBOARD ATTRIBUTES */
    srgp__cur_keyboard_echo_font = 0;
-   srgp__cur_keyboard_echo_color = SRGP_BLACK;
+   srgp__cur_keyboard_echo_color = SRGP_WHITE;
 
    SRGP__disableLocatorCursorEcho();
 
