@@ -70,18 +70,18 @@ SRGP__initColor (requested_planes)
    XAllocNamedColor(srgpx__display, srgpx__colormap, "white", &white, &white_e);
    XFlush(srgpx__display);
 
-   // 0 -> Black 1 -> White
-   SRGP_BLACK = 0;
-   SRGP_WHITE = 1;
+   // 1 -> Black 0 -> White
+   SRGP_WHITE = 0;
+   SRGP_BLACK = 1;
 
    //Initialize the Color Table with the 2 values of Black and White
-   // 0 -> Black 1 -> White
-   strcpy(srgp__colorLookup_table[0].name, "black");
-   srgp__colorLookup_table[0].pixel_value = black_e.pixel;
-   srgp__colorLookup_table[0].set = TRUE;
-   strcpy(srgp__colorLookup_table[1].name, "white");
-   srgp__colorLookup_table[1].pixel_value = white_e.pixel;
+   // 1 -> Black 0 -> White
+   strcpy(srgp__colorLookup_table[1].name, "black");
+   srgp__colorLookup_table[1].pixel_value = black_e.pixel;
    srgp__colorLookup_table[1].set = TRUE;
+   strcpy(srgp__colorLookup_table[0].name, "white");
+   srgp__colorLookup_table[0].pixel_value = white_e.pixel;
+   srgp__colorLookup_table[0].set = TRUE;
 
    /*** DONE FOR ALL CONFIGURATIONS. */
    XSetWindowBackground (srgpx__display, 
