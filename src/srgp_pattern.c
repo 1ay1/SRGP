@@ -109,7 +109,7 @@ void SRGP_loadBitmapPattern (int pattern_id, char *data)
    /* PAINT THE PIXELS */
    for (i=0; i<8; i++)
       for (j=7; j>=0; j--)
-	 XPutPixel (ximage_bit, i,j, (data[i]&(1<<j))?XBLACK:XWHITE);
+	 XPutPixel (ximage_bit, 0 + (7 - j),i, (data[i]&(1<<j))?SRGP_BLACK:SRGP_WHITE);
 
 
    /* PUT THE XIMAGE INTO THE BITMAP */
